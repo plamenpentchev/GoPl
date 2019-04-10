@@ -12,8 +12,30 @@ type database map[string]dollars
 //DB ...
 var Db database
 
+//Mux ...
+var Mux *http.ServeMux
+
 func init() {
 	Db = database{"shoes": 50, "socks": 5, "shirt": 25}
+	Mux = http.NewServeMux()
+	Mux.HandleFunc("/list", Db.list)
+	Mux.HandleFunc("/price", Db.price)
+}
+
+func (db database) list(w http.ResponseWriter, r *http.Request) {
+	db.PrintDatabase(w)
+}
+
+func (db database) price(w http.ResponseWriter, r *http.Request) {
+	item := r.URL.Query().Get("item")
+	price, ok := db[item]
+	if !ok {
+		msg := fmt.Sprintf("product '%s' was not found", item)
+		http.Error(w, msg, http.StatusNotFound)
+		return
+	}
+
+	fmt.Fprintf(w, "%s: %s", item, price)
 }
 
 //ServeHTTP satisfies http.Handler Interface
