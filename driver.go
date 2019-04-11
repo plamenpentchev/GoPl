@@ -1,7 +1,7 @@
 package main
 
 import (
-	"excerices/GoPl/seven"
+	"dev/Chapter7/seven"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,5 +13,6 @@ func main() {
 
 	// seven.Db.PrintDatabase(os.Stdout)
 	// log.Fatal(http.ListenAndServe("localhost:8080", seven.Db))
-	log.Fatal(http.ListenAndServe("localhost:8080", seven.Mux))
+	go http.ListenAndServe("localhost:8080", seven.Mux)
+	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }

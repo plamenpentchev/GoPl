@@ -18,8 +18,14 @@ var Mux *http.ServeMux
 func init() {
 	Db = database{"shoes": 50, "socks": 5, "shirt": 25}
 	Mux = http.NewServeMux()
+	//... using our ServeMux(Mux) instance
 	Mux.HandleFunc("/list", Db.list)
-	Mux.HandleFunc("/price", Db.price)
+	Mux.HandleFunc("/", Db.list)
+
+	//... using the global ServeMux(from net/http) instance.
+	http.HandleFunc("/price", Db.price)
+	http.HandleFunc("/priceProd", Db.price)
+
 }
 
 func (db database) list(w http.ResponseWriter, r *http.Request) {
