@@ -1,7 +1,7 @@
 package main
 
 import (
-	"excerices/GoPl/seven"
+	"dev/Chapter7/seven"
 	"fmt"
 	"log"
 	"net/http"
