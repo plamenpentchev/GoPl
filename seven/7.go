@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"sync"
 )
 
@@ -28,64 +27,11 @@ func init() {
 	Mux = http.NewServeMux()
 	//... using our ServeMux(Mux) instance
 	Mux.HandleFunc("/list", Db.list)
-<<<<<<< HEAD
 	Mux.HandleFunc("/", Db.list)
 
 	//... using the global ServeMux(from net/http) instance.
 	http.HandleFunc("/price", Db.price)
 	http.HandleFunc("/priceProd", Db.price)
-=======
-	Mux.HandleFunc("/price", Db.price)
-	Mux.HandleFunc("/create", Db.credate)
-	Mux.HandleFunc("/update", Db.credate)
-	Mux.HandleFunc("/read", Db.read)
-	Mux.HandleFunc("/delete", Db.delete)
-}
-
-func (db *database) credate(w http.ResponseWriter, r *http.Request) {
-	query := r.URL.Query()
-	if price, err := strconv.ParseFloat(query.Get("price"), 64); err == nil {
-		dlrs := dollars(price)
-		db.mux.Lock()
-		db.db[query.Get("item")] = dlrs
-		db.mux.Unlock()
-		w.WriteHeader(http.StatusOK)
-		db.PrintDatabase(w)
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "unacceptable price [%s]", query.Get("price"))
-	}
-}
-
-func (db *database) read(w http.ResponseWriter, r *http.Request) {
-	query := r.URL.Query()
-	db.mux.RLock()
-	defer db.mux.RUnlock()
-	price, ok := db.db[query.Get("item")]
-	if ok {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "%s: %s", query.Get("item"), price)
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "no [%s] in the data base", query.Get("item"))
-	}
-}
-
-func (db *database) delete(w http.ResponseWriter, r *http.Request) {
-	query := r.URL.Query()
-	_, ok := db.db[query.Get("item")]
-	if ok {
-
-		db.mux.Lock()
-		delete(db.db, query.Get("item"))
-		db.mux.Unlock()
-		db.PrintDatabase(w)
-
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "no product [%s] in data base", query.Get("item"))
-	}
->>>>>>> 32f0b8f1d0ea9940eb01d7bd63115e61d96213d7
 
 }
 
